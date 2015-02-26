@@ -57,7 +57,11 @@
             <artifactId>motech-platform-event</artifactId>
             <version>${motech.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.ws</groupId>
+            <artifactId>spring-ws-core</artifactId>
+            <version>2.1.4.RELEASE</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -129,6 +133,24 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/ihe/iti/csd/_2013/*.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <excludes>**/ihe/iti/csd/_2013/*.java</excludes>
+                </configuration>
             </plugin>
 
         </plugins>
