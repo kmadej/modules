@@ -10,7 +10,7 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 @Endpoint
 public class FooBar {
-    @PayloadRoot(namespace = "http://localhost:8080/modules/csd/foobar", localPart = "getFacilityRequest")
+    @PayloadRoot(namespace = "http://localhost:8080/motech-platform-server/module/csd/foobar", localPart = "getFacilityRequest")
     @ResponsePayload
     public GetModificationsResponse getFacility(@RequestPayload GetModificationsRequest request) {
         GetModificationsResponse response = new GetModificationsResponse();
