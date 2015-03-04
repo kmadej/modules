@@ -1,7 +1,10 @@
 package org.motechproject.csd.it;
 
-import org.apache.http.HttpResponse;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.csd.domain.Facility;
@@ -16,10 +19,11 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.io.InputStream;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Verify ConfigService present & functional.
@@ -41,11 +45,23 @@ public class FacilityServiceBundleIT extends BasePaxIT {
 
     @Test
     public void verifySoapEndpoint() throws IOException, InterruptedException {
-        // TODO: Use a SOAP client or something, this just verifies that its not 404
         login();
-        HttpResponse response = getHttpClient().execute(new HttpPost(String.format("http://localhost:%d/csd/foobar/getFacilityRequest",
-                TestContext.getJettyPort())));
+
+        // TODO: Use a real SOAP client, not HTTP client
+        // TODO: Some headers are not understood by the server
+        HttpPost post;
+        try (InputStream in = getClass().getClassLoader().getResourceAsStream("csdreq.xml")) {
+            String xml = IOUtils.toString(in);
+            post = new HttpPost(String.format("http://localhost:%d/csd/foobar",
+                    TestContext.getJettyPort()));
+            post.setEntity(new StringEntity(xml));
+        }
+
+        post.setHeader(HttpHeaders.CONTENT_TYPE, "application/soap+xml");
+
+        // TODO: Do something more with the response
+        String response = getHttpClient().execute(post, new BasicResponseHandler());
         assertNotNull(response);
-        assertNotSame(404, response.getStatusLine().getStatusCode());
+        assertTrue(response.contains("env:Envelope"));
     }
 }
